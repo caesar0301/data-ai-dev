@@ -1,4 +1,6 @@
-ray[default,data]==2.44.1
+ray[client]==2.44.1
 numpy<2.0,>=1.22
 scipy<=1.11,>=1.7
 #cupy-cuda12x~=13.1
+ipywidgets
+ipykernel

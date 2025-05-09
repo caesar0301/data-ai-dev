@@ -1,3 +1,7 @@
 lancedb
 datasets
 ipykernel
+#open_clip_torch
+ollama
+sentence_transformers
+pandas

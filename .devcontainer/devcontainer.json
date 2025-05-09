@@ -13,6 +13,6 @@
     "http_proxy": "http://host.docker.internal:7890",
     "https_proxy": "http://host.docker.internal:7890"
   },
-  "postCreateCommand": "echo 'Dev container is ready!'"
+  "postCreateCommand": ""
 }
 

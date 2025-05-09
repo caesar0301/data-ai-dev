@@ -1,12 +1,17 @@
 {
-  "name": "Ray Dev Container",
+  "name": "Dev Container",
   "image": "registry.cn-hangzhou.aliyuncs.com/lacogito/devcontainer:ubuntu2404-aliv1",
   "workspaceFolder": "/home/admin/workspace",
   "mounts": [
-    "source=${localWorkspaceFolder},target=/home/admin/workspace,type=bind"
+    "source=${localWorkspaceFolder},target=/home/admin/workspace,type=bind",
+    "source=/Users/xiamingchen/.cache/huggingface,target=/home/admin/.cache/huggingface,type=bind"
   ],
   "settings": {
     "terminal.integrated.defaultProfile.linux": "zsh"
+  },
+  "environment": {
+    "http_proxy": "http://host.docker.internal:7890",
+    "https_proxy": "http://host.docker.internal:7890"
   },
   "postCreateCommand": "echo 'Dev container is ready!'"
 }

@@ -5,3 +5,6 @@ ipykernel
 ollama
 sentence_transformers
 pandas
+pylance
+pyarrow
+duckdb>0.8

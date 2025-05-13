@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	WeaviateHTTPEndpoint = "http://localhost:31467"
-	OllamaEndpoint       = "http://localhost:30733"
+	WeaviateHTTPEndpoint = "localhost:32350"
+	OllamaEndpoint       = "http://myrelease-ollama:11434"
 )
 
 func initWeaviateClient() (*weaviate.Client, error) {
@@ -37,9 +37,23 @@ func initWeaviateClient() (*weaviate.Client, error) {
 }
 
 func initCollectionSchema(client *weaviate.Client) error {
+	tenants := []models.Tenant{
+		{
+			Name: "admin",
+		},
+	}
+	err := client.Schema().TenantsCreator().
+		WithClassName("Droplet").
+		WithTenants(tenants...).
+		Do(context.Background())
+	if err != nil {
+		return fmt.Errorf("failed to create tenants: %v", err)
+	}
+
 	// Define class schema
 	dropletClass := &models.Class{
-		Class: "Droplet",
+		Class:       "Droplet",
+		Description: "A collection representing droplets with metadata and location.",
 		Properties: []*models.Property{
 			{
 				Name:     "uuid",
@@ -67,26 +81,27 @@ func initCollectionSchema(client *weaviate.Client) error {
 			},
 		},
 		Vectorizer: "text2vec-ollama",
-		ModuleConfig: map[string]interface{}{
-			"text2vec-ollama": map[string]interface{}{
+		ModuleConfig: map[string]any{
+			"text2vec-ollama": map[string]any{
 				"model":              "nomic-embed-text:latest",
 				"vectorizeClassName": true,
-				"baseURL":            OllamaEndpoint,
+				"apiEndpoint":        OllamaEndpoint,
 			},
-			"generative-ollama": map[string]interface{}{
-				"model":   "llama3.2:3b",
-				"enabled": true,
-				"baseURL": OllamaEndpoint,
+			"generative-ollama": map[string]any{
+				"model":       "llama3.2:3b",
+				"enabled":     true,
+				"apiEndpoint": OllamaEndpoint,
 			},
 		},
-		Description: "A collection representing droplets with metadata and location.",
+		MultiTenancyConfig: &models.MultiTenancyConfig{
+			Enabled: true,
+		},
 	}
 
 	// Create schema
-	ctx := context.Background()
-	err := client.Schema().ClassCreator().WithClass(dropletClass).Do(ctx)
-	if err != nil {
-		return fmt.Errorf("Failed to create class: %v", err)
+	client.Schema().ClassDeleter().WithClassName(dropletClass.Class).Do(context.Background())
+	if err := client.Schema().ClassCreator().WithClass(dropletClass).Do(context.Background()); err != nil {
+		return fmt.Errorf("failed to create class: %v", err)
 	}
 	fmt.Println("Class 'Droplet' created successfully.")
 	return nil
@@ -94,28 +109,23 @@ func initCollectionSchema(client *weaviate.Client) error {
 
 func insertData(client *weaviate.Client) error {
 	// Insert example Droplet object
-	droplet := &models.Object{
-		Class: "Droplet",
-		Properties: map[string]interface{}{
-			"uuid":         "abc123",
-			"createdTime":  time.Now().Format(time.RFC3339),
-			"modifiedTime": time.Now().Format(time.RFC3339),
-			"coordinates": map[string]float64{
-				"latitude":  37.7749,
-				"longitude": -122.4194,
-			},
-			"text":        "A sample droplet of thought.",
-			"text_format": "markdown",
-		},
+	dropletProps := map[string]string{
+		"uuid":         "abc123",
+		"createdTime":  time.Now().Format(time.RFC3339),
+		"modifiedTime": time.Now().Format(time.RFC3339),
+		"text":         "A sample droplet of thought.",
+		"text_format":  "markdown",
 	}
 
-	ctx := context.Background()
-	_, err := client.Data().Creator().WithObject(droplet).Do(ctx)
+	created, err := client.Data().Creator().
+		WithClassName("Droplet").
+		WithProperties(dropletProps).
+		WithTenant("admin").
+		Do(context.Background())
 	if err != nil {
-		return fmt.Errorf("Failed to insert Droplet object: %v", err)
+		return fmt.Errorf("failed to insert data: %v", err)
 	}
-
-	fmt.Println("Example Droplet object inserted successfully.")
+	fmt.Printf("Example Droplet object inserted successfully: %v", created)
 	return nil
 }
 
@@ -126,5 +136,14 @@ func main() {
 	} else {
 		fmt.Println("Weaviate client initialized.")
 	}
-	initCollectionSchema(client)
+	if err := initCollectionSchema(client); err != nil {
+		panic(err)
+	} else {
+		fmt.Println("Collection schema initialized.")
+	}
+	if err := insertData(client); err != nil {
+		panic(err)
+	} else {
+		fmt.Println("Data inserted successfully.")
+	}
 }

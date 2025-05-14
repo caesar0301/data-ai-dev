@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	WeaviateHTTPEndpoint = "localhost:32350"
+	WeaviateHTTPEndpoint = "localhost:32531"
 	OllamaEndpoint       = "http://myrelease-ollama:11434"
 )
 
@@ -37,19 +37,6 @@ func initWeaviateClient() (*weaviate.Client, error) {
 }
 
 func initCollectionSchema(client *weaviate.Client) error {
-	tenants := []models.Tenant{
-		{
-			Name: "admin",
-		},
-	}
-	err := client.Schema().TenantsCreator().
-		WithClassName("Droplet").
-		WithTenants(tenants...).
-		Do(context.Background())
-	if err != nil {
-		return fmt.Errorf("failed to create tenants: %v", err)
-	}
-
 	// Define class schema
 	dropletClass := &models.Class{
 		Class:       "Droplet",
@@ -104,6 +91,20 @@ func initCollectionSchema(client *weaviate.Client) error {
 		return fmt.Errorf("failed to create class: %v", err)
 	}
 	fmt.Println("Class 'Droplet' created successfully.")
+
+	tenants := []models.Tenant{
+		{
+			Name: "admin",
+		},
+	}
+	err := client.Schema().TenantsCreator().
+		WithClassName("Droplet").
+		WithTenants(tenants...).
+		Do(context.Background())
+	if err != nil {
+		return fmt.Errorf("failed to create tenants: %v", err)
+	}
+	fmt.Println("Tenant admin created successfully.")
 	return nil
 }
 
@@ -125,7 +126,7 @@ func insertData(client *weaviate.Client) error {
 	if err != nil {
 		return fmt.Errorf("failed to insert data: %v", err)
 	}
-	fmt.Printf("Example Droplet object inserted successfully: %v", created)
+	fmt.Printf("Example Droplet object inserted successfully: %v\n", created)
 	return nil
 }
 

@@ -86,7 +86,9 @@ func initCollectionSchema(client *weaviate.Client) error {
 	}
 
 	// Create schema
-	client.Schema().ClassDeleter().WithClassName(dropletClass.Class).Do(context.Background())
+	if err := client.Schema().ClassDeleter().WithClassName(dropletClass.Class).Do(context.Background()); err != nil {
+		return fmt.Errorf("failed to delete class: %v", err)
+	}
 	if err := client.Schema().ClassCreator().WithClass(dropletClass).Do(context.Background()); err != nil {
 		return fmt.Errorf("failed to create class: %v", err)
 	}
@@ -97,11 +99,10 @@ func initCollectionSchema(client *weaviate.Client) error {
 			Name: "admin",
 		},
 	}
-	err := client.Schema().TenantsCreator().
+	if err := client.Schema().TenantsCreator().
 		WithClassName("Droplet").
 		WithTenants(tenants...).
-		Do(context.Background())
-	if err != nil {
+		Do(context.Background()); err != nil {
 		return fmt.Errorf("failed to create tenants: %v", err)
 	}
 	fmt.Println("Tenant admin created successfully.")
@@ -118,15 +119,15 @@ func insertData(client *weaviate.Client) error {
 		"text_format":  "markdown",
 	}
 
-	created, err := client.Data().Creator().
+	if created, err := client.Data().Creator().
 		WithClassName("Droplet").
 		WithProperties(dropletProps).
 		WithTenant("admin").
-		Do(context.Background())
-	if err != nil {
+		Do(context.Background()); err != nil {
 		return fmt.Errorf("failed to insert data: %v", err)
+	} else {
+		fmt.Printf("Example Droplet object inserted successfully: %v\n", created)
 	}
-	fmt.Printf("Example Droplet object inserted successfully: %v\n", created)
 	return nil
 }
 

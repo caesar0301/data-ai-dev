@@ -1,0 +1,87 @@
+{
+  "class": "Atom",
+  "description": "A data object representing an atom with embedded droplet info.",
+  "multiTenancyConfig": {
+    "enabled": true
+  },
+  "vectorizer": "text2vec-ollama",
+  "moduleConfig": {
+    "generative-ollama": {
+      "apiEndpoint": "http://localhost:11434",
+      "enabled": true,
+      "model": "llama3.2:3b"
+    },
+    "text2vec-ollama": {
+      "apiEndpoint": "http://localhost:11434",
+      "model": "nomic-embed-text:latest",
+      "vectorizePropertyName": true
+    }
+  },
+  "properties": [
+    {
+      "name": "uuid",
+      "dataType": ["text"],
+      "description": "Unique identifier for the droplet",
+      "moduleConfig": {
+        "text2vec-ollama": {
+          "skip": true
+        }
+      }
+    },
+    {
+      "name": "created_time",
+      "dataType": ["number"],
+      "description": "Creation timestamp of the atom"
+    },
+    {
+      "name": "modified_time",
+      "dataType": ["number"],
+      "description": "Modification timestamp of the atom"
+    },
+    {
+      "name": "geo_coordinates",
+      "dataType": ["text"],
+      "description": "Geographic location for this atom",
+      "moduleConfig": {
+        "text2vec-ollama": {
+          "skip": true
+        }
+      }
+    },
+    {
+      "name": "description",
+      "dataType": ["text"],
+      "description": "Description of the atom",
+      "moduleConfig": {
+        "text2vec-ollama": {
+          "skip": false
+        }
+      }
+    },
+    {
+      "name": "mime_type",
+      "dataType": ["text"],
+      "description": "MIME type of the atom's content",
+      "moduleConfig": {
+        "text2vec-ollama": {
+          "skip": true
+        }
+      }
+    },
+    {
+      "name": "atom_type",
+      "dataType": ["number"],
+      "description": "Type of atom (e.g., TEXT, IMAGE, AUDIO, etc.)"
+    },
+    {
+      "name": "data",
+      "dataType": ["text"],
+      "description": "Text content",
+      "moduleConfig": {
+        "text2vec-ollama": {
+          "skip": false
+        }
+      }
+    }
+  ]
+}

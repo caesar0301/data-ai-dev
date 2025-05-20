@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	WeaviateHTTPEndpoint = "localhost:31848"
+	WeaviateHTTPEndpoint = "localhost:31395"
 	OllamaEndpoint       = "http://myrelease-ollama:11434"
 )
 
@@ -41,24 +41,31 @@ func initWeaviateClient() (*weaviate.Client, error) {
 func initCollectionSchema(client *weaviate.Client) error {
 	// Define class schema
 	// Load schema from JSON file
-	schemaFile, err := os.ReadFile("droplet_schema.json")
+	schemaFile, err := os.ReadFile("atom_schema.json")
 	if err != nil {
 		panic(fmt.Errorf("failed to read schema file: %w", err))
 	}
 
-	var dropletClass models.Class
-	if err := json.Unmarshal(schemaFile, &dropletClass); err != nil {
+	var atomClass models.Class
+	if err := json.Unmarshal(schemaFile, &atomClass); err != nil {
 		panic(fmt.Errorf("failed to parse schema JSON: %w", err))
 	}
 
+	moduleConfig := atomClass.ModuleConfig.(map[string]any)
+	moduleConfig["text2vec-ollama"].(map[string]any)["apiEndpoint"] = OllamaEndpoint
+	moduleConfig["generative-ollama"].(map[string]any)["apiEndpoint"] = OllamaEndpoint
+
+	mashed, _ := json.Marshal(atomClass)
+	fmt.Println(string(mashed) + "\n")
+
 	// Create schema
-	if err := client.Schema().ClassDeleter().WithClassName(dropletClass.Class).Do(context.Background()); err != nil {
+	if err := client.Schema().ClassDeleter().WithClassName(atomClass.Class).Do(context.Background()); err != nil {
 		return fmt.Errorf("failed to delete class: %v", err)
 	}
-	if err := client.Schema().ClassCreator().WithClass(&dropletClass).Do(context.Background()); err != nil {
+	if err := client.Schema().ClassCreator().WithClass(&atomClass).Do(context.Background()); err != nil {
 		return fmt.Errorf("failed to create class: %v", err)
 	}
-	fmt.Println("Class 'Droplet' created successfully.")
+	fmt.Println("Class 'Atom' created successfully.")
 
 	tenants := []models.Tenant{
 		{
@@ -66,7 +73,7 @@ func initCollectionSchema(client *weaviate.Client) error {
 		},
 	}
 	if err := client.Schema().TenantsCreator().
-		WithClassName("Droplet").
+		WithClassName("Atom").
 		WithTenants(tenants...).
 		Do(context.Background()); err != nil {
 		return fmt.Errorf("failed to create tenants: %v", err)
@@ -76,27 +83,28 @@ func initCollectionSchema(client *weaviate.Client) error {
 }
 
 func insertData(client *weaviate.Client) error {
-	// Insert example Droplet object
-	dropletProps := map[string]any{
+	// Insert example Atom object
+	atomProps := map[string]any{
 		"uuid":          "abc123",
 		"created_time":  time.Now().UnixMilli(),
 		"modified_time": time.Now().UnixMilli(),
-		"text":          "A sample droplet of thought.",
-		"text_format":   "markdown",
+		"text":          "A sample atom of thought.",
+		"atom_type":     1, // TEXT
+		"mime_type":     "text/plain",
 	}
 
 	if created, err := client.Data().Creator().
-		WithClassName("Droplet").
-		WithProperties(dropletProps).
+		WithClassName("Atom").
+		WithProperties(atomProps).
 		WithTenant("admin").
 		Do(context.Background()); err != nil {
 		return fmt.Errorf("failed to insert data: %v", err)
 	} else {
-		fmt.Printf("Example Droplet object inserted successfully: %v\n", created.Object)
+		fmt.Printf("Example Atom object inserted successfully: %v\n", created.Object)
 	}
 
 	entries, err := client.Data().ObjectsGetter().
-		WithClassName("Droplet").
+		WithClassName("Atom").
 		WithTenant("admin").
 		Do(context.Background())
 	if err != nil {

@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/golang/glog"
@@ -11,7 +13,7 @@ import (
 )
 
 const (
-	WeaviateHTTPEndpoint = "localhost:32531"
+	WeaviateHTTPEndpoint = "localhost:31848"
 	OllamaEndpoint       = "http://myrelease-ollama:11434"
 )
 
@@ -38,58 +40,22 @@ func initWeaviateClient() (*weaviate.Client, error) {
 
 func initCollectionSchema(client *weaviate.Client) error {
 	// Define class schema
-	dropletClass := &models.Class{
-		Class:       "Droplet",
-		Description: "A collection representing droplets with metadata and location.",
-		Properties: []*models.Property{
-			{
-				Name:     "uuid",
-				DataType: []string{"text"},
-			},
-			{
-				Name:     "createdTime",
-				DataType: []string{"date"},
-			},
-			{
-				Name:     "modifiedTime",
-				DataType: []string{"date"},
-			},
-			{
-				Name:     "geoCoordinates",
-				DataType: []string{"geoCoordinates"},
-			},
-			{
-				Name:     "text",
-				DataType: []string{"text"},
-			},
-			{
-				Name:     "text_format",
-				DataType: []string{"text"},
-			},
-		},
-		Vectorizer: "text2vec-ollama",
-		ModuleConfig: map[string]any{
-			"text2vec-ollama": map[string]any{
-				"model":              "nomic-embed-text:latest",
-				"vectorizeClassName": true,
-				"apiEndpoint":        OllamaEndpoint,
-			},
-			"generative-ollama": map[string]any{
-				"model":       "llama3.2:3b",
-				"enabled":     true,
-				"apiEndpoint": OllamaEndpoint,
-			},
-		},
-		MultiTenancyConfig: &models.MultiTenancyConfig{
-			Enabled: true,
-		},
+	// Load schema from JSON file
+	schemaFile, err := os.ReadFile("droplet_schema.json")
+	if err != nil {
+		panic(fmt.Errorf("failed to read schema file: %w", err))
+	}
+
+	var dropletClass models.Class
+	if err := json.Unmarshal(schemaFile, &dropletClass); err != nil {
+		panic(fmt.Errorf("failed to parse schema JSON: %w", err))
 	}
 
 	// Create schema
 	if err := client.Schema().ClassDeleter().WithClassName(dropletClass.Class).Do(context.Background()); err != nil {
 		return fmt.Errorf("failed to delete class: %v", err)
 	}
-	if err := client.Schema().ClassCreator().WithClass(dropletClass).Do(context.Background()); err != nil {
+	if err := client.Schema().ClassCreator().WithClass(&dropletClass).Do(context.Background()); err != nil {
 		return fmt.Errorf("failed to create class: %v", err)
 	}
 	fmt.Println("Class 'Droplet' created successfully.")
@@ -111,12 +77,12 @@ func initCollectionSchema(client *weaviate.Client) error {
 
 func insertData(client *weaviate.Client) error {
 	// Insert example Droplet object
-	dropletProps := map[string]string{
-		"uuid":         "abc123",
-		"createdTime":  time.Now().Format(time.RFC3339),
-		"modifiedTime": time.Now().Format(time.RFC3339),
-		"text":         "A sample droplet of thought.",
-		"text_format":  "markdown",
+	dropletProps := map[string]any{
+		"uuid":          "abc123",
+		"created_time":  time.Now().UnixMilli(),
+		"modified_time": time.Now().UnixMilli(),
+		"text":          "A sample droplet of thought.",
+		"text_format":   "markdown",
 	}
 
 	if created, err := client.Data().Creator().
@@ -126,7 +92,18 @@ func insertData(client *weaviate.Client) error {
 		Do(context.Background()); err != nil {
 		return fmt.Errorf("failed to insert data: %v", err)
 	} else {
-		fmt.Printf("Example Droplet object inserted successfully: %v\n", created)
+		fmt.Printf("Example Droplet object inserted successfully: %v\n", created.Object)
+	}
+
+	entries, err := client.Data().ObjectsGetter().
+		WithClassName("Droplet").
+		WithTenant("admin").
+		Do(context.Background())
+	if err != nil {
+		return fmt.Errorf("failed to get objects: %v", err)
+	}
+	for _, entry := range entries {
+		fmt.Printf("Entry: %v\n", entry.ID.String())
 	}
 	return nil
 }

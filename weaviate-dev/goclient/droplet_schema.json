@@ -1,0 +1,55 @@
+{
+  "class": "Droplet",
+  "description": "A data object representing a Droplet with optional attachments",
+  "vectorizer": "text2vec-ollama",
+  "moduleConfig": {
+    "text2vec-ollama": {
+      "model": "nomic-embed-text:latest",
+      "apiEndpoint": "http://myrelease-ollama:11434"
+    },
+    "generative-ollama": {
+      "model": "llama3.2:3b",
+      "apiEndpoint": "http://myrelease-ollama:11434"
+    }
+  },
+  "multiTenancyConfig": {
+    "enabled": true
+  },
+  "properties": [
+    {
+      "name": "uuid",
+      "dataType": ["text"],
+      "description": "Unique identifier for the droplet"
+    },
+    {
+      "name": "created_time",
+      "dataType": ["number"],
+      "description": "Timestamp when the droplet was created"
+    },
+    {
+      "name": "modified_time",
+      "dataType": ["number"],
+      "description": "Timestamp when the droplet was last modified"
+    },
+    {
+      "name": "geo_coordinates",
+      "dataType": ["text"],
+      "description": "Geographical coordinates of the droplet"
+    },
+    {
+      "name": "text",
+      "dataType": ["text"],
+      "description": "Textual content of the droplet"
+    },
+    {
+      "name": "text_format",
+      "dataType": ["text"],
+      "description": "Format of the text (e.g., markdown, html)"
+    },
+    {
+      "name": "attachments",
+      "dataType": ["blob"],
+      "description": "Serialized attachments"
+    }
+  ]
+}

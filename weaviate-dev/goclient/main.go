@@ -59,10 +59,14 @@ func initCollectionSchema(client *weaviate.Client) error {
 	fmt.Println(string(mashed) + "\n")
 
 	// Create schema
-	if err := client.Schema().ClassDeleter().WithClassName(atomClass.Class).Do(context.Background()); err != nil {
+	if err := client.Schema().ClassDeleter().
+		WithClassName(atomClass.Class).
+		Do(context.Background()); err != nil {
 		return fmt.Errorf("failed to delete class: %v", err)
 	}
-	if err := client.Schema().ClassCreator().WithClass(&atomClass).Do(context.Background()); err != nil {
+	if err := client.Schema().ClassCreator().
+		WithClass(&atomClass).
+		Do(context.Background()); err != nil {
 		return fmt.Errorf("failed to create class: %v", err)
 	}
 	fmt.Println("Class 'Atom' created successfully.")

@@ -39,7 +39,6 @@ func initWeaviateClient() (*weaviate.Client, error) {
 }
 
 func initCollectionSchema(client *weaviate.Client) error {
-	// Define class schema
 	// Load schema from JSON file
 	schemaFile, err := os.ReadFile("atom_schema.json")
 	if err != nil {
@@ -115,7 +114,7 @@ func insertData(client *weaviate.Client) error {
 		return fmt.Errorf("failed to get objects: %v", err)
 	}
 	for _, entry := range entries {
-		fmt.Printf("Entry: %v\n", entry.ID.String())
+		fmt.Printf("Entry: %v\n", entry.Properties)
 	}
 	return nil
 }

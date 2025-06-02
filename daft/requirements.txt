@@ -1,3 +1,4 @@
 daft
 daft[ray]
 ray[client]
+lancedb

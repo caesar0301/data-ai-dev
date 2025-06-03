@@ -165,8 +165,8 @@ worker:
       cpu: "1"
       memory: "1G"
     requests:
-      cpu: "100m"
-      memory: "512Mi"
+      cpu: "1"
+      memory: "1G"
   annotations: {}
   nodeSelector: {}
   tolerations: []
@@ -287,4 +287,3 @@ additionalWorkerGroups:
 service:
   # This is optional, and the default is ClusterIP.
   type: ClusterIP
-

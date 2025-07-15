@@ -1,0 +1,5 @@
+plotly>=6.2.0
+faker>=19.12.0
+pandasai>=3.0.0b19
+pandasai-openai>=0.1.4
+matplotlib>=3.6.0

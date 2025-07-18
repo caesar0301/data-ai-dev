@@ -207,3 +207,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+lancedb/sift/
+lancedb/ubm_data/

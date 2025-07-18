@@ -1,0 +1,20 @@
+[project]
+name = "daft-dev"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "xiaming.cxm",email = "xiaming.cxm@alibaba-inc.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "daft (>=0.5.10,<0.6.0)",
+    "daft[ray] (>=0.5.10,<0.6.0)",
+    "ray[client] (>=2.47.1,<3.0.0)",
+    "lancedb (>=0.24.1,<0.25.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

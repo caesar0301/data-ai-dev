@@ -1,0 +1,21 @@
+[project]
+name = "ray-dev"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "xiaming.cxm",email = "xiaming.cxm@alibaba-inc.com"}
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "ray[client] (==2.44.1)",
+    "numpy (>=1.22,<2.0)",
+    "scipy (>=1.7,<=1.11)",
+    "ipywidgets (>=8.1.7,<9.0.0)",
+    "ipykernel (>=6.29.5,<7.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

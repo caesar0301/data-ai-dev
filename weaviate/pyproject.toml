@@ -1,0 +1,18 @@
+[project]
+name = "weaviate-dev"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "xiaming.cxm",email = "xiaming.cxm@alibaba-inc.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "weaviate-client (>=4.16.1,<5.0.0)",
+    "ipykernel (>=6.29.5,<7.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

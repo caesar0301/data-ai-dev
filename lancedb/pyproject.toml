@@ -1,40 +1,48 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 
-[project]
+[tool.poetry]
 name = "lancedb-project"
 version = "0.1.0"
 description = "LanceDB project with vector search capabilities"
-requires-python = ">=3.8"
-dependencies = [
-    "lancedb",
-    "datasets",
-    "ipykernel",
-    "ollama",
-    "sentence_transformers",
-    "pandas",
-    "pylance",
-    "pyarrow",
-    "duckdb>0.8",
-    "lmdb (>=1.7.2,<2.0.0)",
-]
+authors = ["Your Name <your.email@example.com>"]
+readme = "README.md"
+package-mode = false
 
-[project.optional-dependencies]
-dev = [
-    "jupyter",
-    "notebook",
-]
+[tool.poetry.dependencies]
+python = "^3.9"
+lancedb = "^0.24.1"
+datasets = "^4.0.0"
+ipykernel = "^6.29.5"
+ollama = "*"
+sentence-transformers = "*"
+pandas = "^2.3.1"
+pyarrow = "*"
+duckdb = "^1.3.2"
+lmdb = "^1.7.2"
+matplotlib = "*"
+seaborn = "^0.13.2"
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["*"]
-exclude = ["tests*", "test*"]
+[tool.poetry.group.dev.dependencies]
+jupyter = "*"
+notebook = "*"
+black = {version = "^23.0.0", extras = ["d"]}
+isort = "^5.12.0"
+pytest = "^7.0.0"
+pytest-cov = "^4.0.0"
 
 [tool.black]
 line-length = 88
-target-version = ['py38']
+target-version = ['py39']
 
 [tool.isort]
 profile = "black"
-line_length = 88 
+line_length = 88
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "--cov=. --cov-report=html --cov-report=term-missing" 

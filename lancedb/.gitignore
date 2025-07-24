@@ -150,9 +150,7 @@ cython_debug/
 *.pkl
 *.parquet
 *.npz
-compression_results.json
-compression_comparison.png
-vector_compression_results.json
-vector_compression_comparison.png
+text_results/
+vector_results/
 text_data*
 sift_vectors*

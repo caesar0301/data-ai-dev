@@ -303,7 +303,10 @@ def benchmark_read_performance(base_path: str, lance_compressions: list) -> Dict
             
     return results
 
-def plot_results(all_results: Dict[str, Any], read_results: Dict[str, float]):
+def plot_results(all_results: Dict[str, Any], read_results: Dict[str, float], output_dir: str = "vector_results"):
+    # Create output directory if it doesn't exist
+    os.makedirs(output_dir, exist_ok=True)
+    
     fig, axes = plt.subplots(2, 2, figsize=(18, 16))
     ax1, ax2, ax3, ax4 = axes.flatten()
 
@@ -342,20 +345,24 @@ def plot_results(all_results: Dict[str, Any], read_results: Dict[str, float]):
     ax4.grid(True, alpha=0.3)
 
     plt.tight_layout(pad=2.0)
-    plt.savefig('vector_compression_comparison.png', dpi=300, bbox_inches='tight')
+    plt.savefig(os.path.join(output_dir, 'vector_compression_comparison.png'), dpi=300, bbox_inches='tight')
     plt.show()
 
 def main():
-    print("=== LanceDB Vector Compression Benchmark (SIFT Dataset) ===")
+    print("=== Lance Vector Compression Benchmark (SIFT Dataset) ===")
     
     # Load SIFT dataset
     df = load_sift_dataset(sample_size=100000)  # Sample 100k vectors for faster testing
     base_path = "sift_vectors"
+    output_dir = "vector_results"
+    
+    # Create output directory
+    os.makedirs(output_dir, exist_ok=True)
     
     all_results = {}
     lance_compressions = ['zstd', 'lz4', 'gzip']
 
-    print("\n=== LanceDB Write Tests ===")
+    print("\n=== Lance Write Tests ===")
     for compression in lance_compressions:
         if compression == 'zstd':
             # Test different zstd compression levels
@@ -388,8 +395,9 @@ def main():
               f"{res.get('write_time', 0):<15.3f} {rtime:<15.3f}")
     print("="*90 + "\n")
 
-    # Save detailed results
-    with open('vector_compression_results.json', 'w') as f:
+    # Save detailed results to output directory
+    results_file = os.path.join(output_dir, 'vector_compression_results.json')
+    with open(results_file, 'w') as f:
         json.dump({
             'all_results': all_results, 
             'read_results': read_results,
@@ -401,9 +409,9 @@ def main():
             }
         }, f, indent=2, default=str)
 
-    plot_results(all_results, read_results)
-    print("Results saved to vector_compression_results.json")
-    print("Visualization saved to vector_compression_comparison.png")
+    plot_results(all_results, read_results, output_dir)
+    print(f"Results saved to {results_file}")
+    print(f"Visualization saved to {os.path.join(output_dir, 'vector_compression_comparison.png')}")
 
     # Cleanup
     cleanup_files = [

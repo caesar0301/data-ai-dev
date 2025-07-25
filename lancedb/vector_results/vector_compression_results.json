@@ -1,0 +1,118 @@
+{
+  "all_results": {
+    "lance-zstd-level1": {
+      "compression_algo": "zstd",
+      "compression_level": "1",
+      "file_size_bytes": 104894793,
+      "file_size_mb": 100.0354700088501,
+      "write_time": 0.07378005981445312,
+      "compression_ratio": 0.48810811800734477,
+      "original_size_bytes": 51200000,
+      "original_size_mb": 48.828125
+    },
+    "lance-zstd-level3": {
+      "compression_algo": "zstd",
+      "compression_level": "3",
+      "file_size_bytes": 104894792,
+      "file_size_mb": 100.03546905517578,
+      "write_time": 0.05309891700744629,
+      "compression_ratio": 0.488108122660656,
+      "original_size_bytes": 51200000,
+      "original_size_mb": 48.828125
+    },
+    "lance-zstd-level6": {
+      "compression_algo": "zstd",
+      "compression_level": "6",
+      "file_size_bytes": 104894792,
+      "file_size_mb": 100.03546905517578,
+      "write_time": 0.05246996879577637,
+      "compression_ratio": 0.488108122660656,
+      "original_size_bytes": 51200000,
+      "original_size_mb": 48.828125
+    },
+    "lance-zstd-level9": {
+      "compression_algo": "zstd",
+      "compression_level": "9",
+      "file_size_bytes": 104894792,
+      "file_size_mb": 100.03546905517578,
+      "write_time": 0.04799175262451172,
+      "compression_ratio": 0.488108122660656,
+      "original_size_bytes": 51200000,
+      "original_size_mb": 48.828125
+    },
+    "lance-lz4": {
+      "compression_algo": "lz4",
+      "compression_level": "3",
+      "file_size_bytes": 104894399,
+      "file_size_mb": 100.03509426116943,
+      "write_time": 0.03862190246582031,
+      "compression_ratio": 0.48810995141885505,
+      "original_size_bytes": 51200000,
+      "original_size_mb": 48.828125
+    },
+    "lance-gzip": {
+      "compression_algo": "gzip",
+      "compression_level": "3",
+      "file_size_bytes": 104894792,
+      "file_size_mb": 100.03546905517578,
+      "write_time": 0.05195307731628418,
+      "compression_ratio": 0.488108122660656,
+      "original_size_bytes": 51200000,
+      "original_size_mb": 48.828125
+    },
+    "CSV": {
+      "format": "CSV",
+      "file_size_bytes": 63823376,
+      "file_size_mb": 60.86671447753906,
+      "write_time": 3.082720994949341,
+      "compression_ratio": 0.8022139098376745,
+      "original_size_bytes": 51200000,
+      "original_size_mb": 48.828125
+    },
+    "GZIP CSV": {
+      "format": "GZIP CSV",
+      "file_size_bytes": 14028617,
+      "file_size_mb": 13.378731727600098,
+      "write_time": 47.04352593421936,
+      "compression_ratio": 3.649682645124605,
+      "original_size_bytes": 51200000,
+      "original_size_mb": 48.828125
+    },
+    "Parquet (Snappy)": {
+      "format": "Parquet (Snappy)",
+      "file_size_bytes": 13535971,
+      "file_size_mb": 12.908907890319824,
+      "write_time": 0.15003085136413574,
+      "compression_ratio": 3.7825140139558515,
+      "original_size_bytes": 51200000,
+      "original_size_mb": 48.828125
+    },
+    "NPZ (Compressed)": {
+      "format": "NPZ (Compressed)",
+      "file_size_bytes": 15040758,
+      "file_size_mb": 14.343984603881836,
+      "write_time": 3.72468900680542,
+      "compression_ratio": 3.4040837569489515,
+      "original_size_bytes": 51200000,
+      "original_size_mb": 48.828125
+    }
+  },
+  "read_results": {
+    "lance-zstd-level1": 0.04064607620239258,
+    "lance-zstd-level3": 0.038227081298828125,
+    "lance-zstd-level6": 0.04094719886779785,
+    "lance-zstd-level9": 0.037780046463012695,
+    "lance-lz4": 0.03794717788696289,
+    "lance-gzip": 0.038774967193603516,
+    "CSV": 0.4589252471923828,
+    "GZIP CSV": 0.4985501766204834,
+    "Parquet (Snappy)": 0.02038121223449707,
+    "NPZ (Compressed)": 0.0015950202941894531
+  },
+  "dataset_info": {
+    "vectors": 100000,
+    "dimensions": 128,
+    "total_elements": 12800000,
+    "original_size_mb": 48.828125
+  }
+}

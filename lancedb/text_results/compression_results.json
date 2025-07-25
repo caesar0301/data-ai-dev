@@ -1,0 +1,84 @@
+{
+  "all_results": {
+    "lance-zstd-level1": {
+      "compression_algo": "zstd",
+      "compression_level": "1",
+      "file_size_bytes": 464843,
+      "file_size_mb": 0.44330883026123047,
+      "write_time": 0.03921198844909668,
+      "compression_ratio": 4.799579643019256
+    },
+    "lance-zstd-level3": {
+      "compression_algo": "zstd",
+      "compression_level": "3",
+      "file_size_bytes": 464331,
+      "file_size_mb": 0.44282054901123047,
+      "write_time": 0.005939960479736328,
+      "compression_ratio": 4.80487195556618
+    },
+    "lance-zstd-level6": {
+      "compression_algo": "zstd",
+      "compression_level": "6",
+      "file_size_bytes": 457162,
+      "file_size_mb": 0.43598365783691406,
+      "write_time": 0.007520914077758789,
+      "compression_ratio": 4.880219703299924
+    },
+    "lance-zstd-level9": {
+      "compression_algo": "zstd",
+      "compression_level": "9",
+      "file_size_bytes": 453898,
+      "file_size_mb": 0.43287086486816406,
+      "write_time": 0.008508920669555664,
+      "compression_ratio": 4.915313572652887
+    },
+    "lance-lz4": {
+      "compression_algo": "lz4",
+      "compression_level": "3",
+      "file_size_bytes": 2024555,
+      "file_size_mb": 1.9307661056518555,
+      "write_time": 0.0056610107421875,
+      "compression_ratio": 1.1019957472135853
+    },
+    "lance-gzip": {
+      "compression_algo": "gzip",
+      "compression_level": "3",
+      "file_size_bytes": 2024576,
+      "file_size_mb": 1.9307861328125,
+      "write_time": 0.006020069122314453,
+      "compression_ratio": 1.1019843167161913
+    },
+    "CSV": {
+      "format": "CSV",
+      "file_size_bytes": 2231051,
+      "file_size_mb": 2.1276960372924805,
+      "write_time": 0,
+      "compression_ratio": 1.0
+    },
+    "GZIP CSV": {
+      "format": "GZIP CSV",
+      "file_size_bytes": 159968,
+      "file_size_mb": 0.152557373046875,
+      "write_time": 0.04881477355957031,
+      "compression_ratio": 13.946858121624325
+    },
+    "Parquet (Snappy)": {
+      "format": "Parquet (Snappy)",
+      "file_size_bytes": 267837,
+      "file_size_mb": 0.2554292678833008,
+      "write_time": 0.051110029220581055,
+      "compression_ratio": 8.329883473903903
+    }
+  },
+  "read_results": {
+    "lance-zstd-level1": 0.03382396697998047,
+    "lance-zstd-level3": 0.002794981002807617,
+    "lance-zstd-level6": 0.002521991729736328,
+    "lance-zstd-level9": 0.002312183380126953,
+    "lance-lz4": 0.0021660327911376953,
+    "lance-gzip": 0.002311229705810547,
+    "CSV": 0.010989189147949219,
+    "GZIP CSV": 0.010942220687866211,
+    "Parquet (Snappy)": 0.008298873901367188
+  }
+}

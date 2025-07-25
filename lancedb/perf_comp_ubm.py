@@ -233,21 +233,28 @@ def benchmark_read_performance(base_path: str, lance_compressions: list) -> Dict
     
     # Test Lance read performance
     for compression in lance_compressions:
-        lance_path = f"{base_path}_lance_{compression}"
-        if os.path.exists(lance_path):
-            # Read entire dataset
-            start_time = time.time()
-            dataset = lance.dataset(lance_path)
-            table = dataset.to_table()
-            read_time = time.time() - start_time
-            
-            # Read with filters
-            start_time = time.time()
-            filtered_table = dataset.to_table(filter=f"key_size > {table['key_size'].mean()}")
-            filter_time = time.time() - start_time
-            
-            read_results[f"lance_{compression}_full"] = read_time
-            read_results[f"lance_{compression}_filtered"] = filter_time
+        if compression == 'zstd':
+            # Test different zstd compression levels
+            for level in ['1', '3', '6', '9']:
+                lance_path = f"{base_path}_{compression}_level{level}.lance"
+                if os.path.exists(lance_path):
+                    # Read entire dataset
+                    start_time = time.time()
+                    dataset = lance.dataset(lance_path)
+                    table = dataset.to_table()
+                    read_time = time.time() - start_time
+                    
+                    read_results[f"lance-{compression}-level{level}"] = read_time
+        else:
+            lance_path = f"{base_path}_{compression}.lance"
+            if os.path.exists(lance_path):
+                # Read entire dataset
+                start_time = time.time()
+                dataset = lance.dataset(lance_path)
+                table = dataset.to_table()
+                read_time = time.time() - start_time
+                
+                read_results[f"lance-{compression}"] = read_time
     
     # Test other formats
     formats = ['pickle', 'gzip', 'json', 'json_gzip']
@@ -278,7 +285,7 @@ def benchmark_read_performance(base_path: str, lance_compressions: list) -> Dict
                     data = json.load(f)
             
             read_time = time.time() - start_time
-            read_results[f"{fmt}_read"] = read_time
+            read_results[fmt] = read_time
     
     return read_results
 
@@ -287,146 +294,141 @@ def plot_results(all_results: Dict[str, Any], read_results: Dict[str, float], ou
     os.makedirs(output_dir, exist_ok=True)
     
     # Prepare data for plotting
-    lance_results = []
-    other_results = []
-    
-    for result in all_results.values():
-        if isinstance(result, dict) and 'compression' in result:
-            lance_results.append(result)
-        elif isinstance(result, dict) and 'format' in result:
-            other_results.append(result)
-    
-    # Create comparison DataFrame
-    all_formats = []
-    for result in lance_results:
-        all_formats.append({
-            'format': f"lance_{result['compression']}",
-            'write_time': result['write_time'],
-            'size_mb': result['lance_size'] / (1024 * 1024),
-            'compression_ratio': result['compression_ratio'],
-            'space_saved': result['space_saved']
-        })
-    
-    for result in other_results:
-        all_formats.append({
-            'format': result['format'],
-            'write_time': result['write_time'],
-            'size_mb': result['size'] / (1024 * 1024),
-            'compression_ratio': result['compression_ratio'],
-            'space_saved': result['space_saved']
-        })
-    
-    df_plot = pd.DataFrame(all_formats)
-    
-    # Create plots
-    fig, axes = plt.subplots(2, 2, figsize=(15, 12))
+    formats = list(all_results.keys())
+    ratios = [res.get('compression_ratio', 0) for res in all_results.values()]
+    sizes = [res.get('lance_size', res.get('size', 0)) / (1024*1024) for res in all_results.values()]
+    write_times = [res.get('write_time', 0) for res in all_results.values()]
+    read_times = [read_results.get(f, 0) for f in formats]
+
+    # Create subplots
+    fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(16, 12))
     fig.suptitle('UBM Data Compression Performance Comparison', fontsize=16)
-    
-    # 1. File sizes
-    sns.barplot(data=df_plot, x='format', y='size_mb', ax=axes[0, 0])
-    axes[0, 0].set_title('File Sizes (MB)')
-    axes[0, 0].tick_params(axis='x', rotation=45)
-    axes[0, 0].set_ylabel('Size (MB)')
-    
-    # 2. Compression ratios
-    sns.barplot(data=df_plot, x='format', y='compression_ratio', ax=axes[0, 1])
-    axes[0, 1].set_title('Compression Ratios')
-    axes[0, 1].tick_params(axis='x', rotation=45)
-    axes[0, 1].set_ylabel('Compression Ratio')
-    
-    # 3. Space saved percentage
-    sns.barplot(data=df_plot, x='format', y='space_saved', ax=axes[1, 0])
-    axes[1, 0].set_title('Space Saved (%)')
-    axes[1, 0].tick_params(axis='x', rotation=45)
-    axes[1, 0].set_ylabel('Space Saved (%)')
-    
-    # 4. Write times
-    sns.barplot(data=df_plot, x='format', y='write_time', ax=axes[1, 1])
-    axes[1, 1].set_title('Write Times (seconds)')
-    axes[1, 1].tick_params(axis='x', rotation=45)
-    axes[1, 1].set_ylabel('Time (seconds)')
-    
-    plt.tight_layout()
+
+    ax1.bar(formats, ratios, color='skyblue')
+    ax1.set_title('Compression Ratio (Higher is Better)', fontsize=12)
+    ax1.set_ylabel('Ratio')
+    ax1.tick_params(axis='x', rotation=45)
+    ax1.grid(True, alpha=0.3)
+
+    ax2.bar(formats, sizes, color='lightcoral')
+    ax2.set_title('File Size (Lower is Better)', fontsize=12)
+    ax2.set_ylabel('Size (MB)')
+    ax2.tick_params(axis='x', rotation=45)
+    ax2.grid(True, alpha=0.3)
+
+    ax3.bar(formats, write_times, color='lightgreen')
+    ax3.set_title('Write Time (Lower is Better)', fontsize=12)
+    ax3.set_ylabel('Time (s)')
+    ax3.tick_params(axis='x', rotation=45)
+    ax3.grid(True, alpha=0.3)
+
+    ax4.bar(formats, read_times, color='gold')
+    ax4.set_title('Read Time (Lower is Better)', fontsize=12)
+    ax4.set_ylabel('Time (s)')
+    ax4.tick_params(axis='x', rotation=45)
+    ax4.grid(True, alpha=0.3)
+
+    plt.tight_layout(pad=2.0)
     plt.savefig(os.path.join(output_dir, 'compression_comparison.png'), dpi=300, bbox_inches='tight')
     plt.show()
-    
-    # Read performance plot
-    if read_results:
-        read_df = pd.DataFrame([
-            {'format': k, 'read_time': v} for k, v in read_results.items()
-        ])
-        
-        plt.figure(figsize=(12, 6))
-        sns.barplot(data=read_df, x='format', y='read_time')
-        plt.title('Read Performance Comparison')
-        plt.xticks(rotation=45)
-        plt.ylabel('Read Time (seconds)')
-        plt.tight_layout()
-        plt.savefig(os.path.join(output_dir, 'read_performance.png'), dpi=300, bbox_inches='tight')
-        plt.show()
-    
-    # Save detailed results
-    results_summary = {
-        'compression_results': all_results,
-        'read_results': read_results,
-        'summary_stats': {
-            'total_records': len(df_plot) if len(df_plot) > 0 else 0,
-            'original_size_mb': df_plot['size_mb'].max() if len(df_plot) > 0 else 0,
-            'best_compression': df_plot.loc[df_plot['compression_ratio'].idxmax(), 'format'] if len(df_plot) > 0 else 'none',
-            'fastest_write': df_plot.loc[df_plot['write_time'].idxmin(), 'format'] if len(df_plot) > 0 else 'none',
-            'smallest_size': df_plot.loc[df_plot['size_mb'].idxmin(), 'format'] if len(df_plot) > 0 else 'none'
-        }
-    }
-    
-    with open(os.path.join(output_dir, 'results.json'), 'w') as f:
-        json.dump(results_summary, f, indent=2, default=str)
-    
-    # Print summary
-    print("\n" + "="*60)
-    print("UBM DATA COMPRESSION RESULTS SUMMARY")
-    print("="*60)
-    print(f"Total records processed: {results_summary['summary_stats']['total_records']}")
-    print(f"Original data size: {results_summary['summary_stats']['original_size_mb']:.2f} MB")
-    print(f"Best compression: {results_summary['summary_stats']['best_compression']}")
-    print(f"Fastest write: {results_summary['summary_stats']['fastest_write']}")
-    print(f"Smallest file size: {results_summary['summary_stats']['smallest_size']}")
-    print("="*60)
 
 def main():
-    print("UBM Data Compression Performance Profiling")
-    print("="*50)
+    print("=== Lance UBM Data Compression Benchmark ===")
     
     # Load UBM dataset
     df = load_ubm_dataset()
+    base_path = "ubm_data"
+    output_dir = "ubm_results"
     
-    # Define compression methods to test
-    lance_compressions = ['lz4', 'zstd', 'gzip', 'brotli']
-    compression_levels = ['1', '3', '6', '9']
+    # Create output directory
+    os.makedirs(output_dir, exist_ok=True)
     
     all_results = {}
-    
-    # Test Lance compressions
-    print("\nTesting Lance compression methods...")
+    lance_compressions = ['zstd', 'lz4', 'gzip']
+
+    print("\n=== Lance Write Tests ===")
     for compression in lance_compressions:
-        for level in compression_levels:
-            print(f"Testing Lance {compression} level {level}...")
-            result = compress_with_lance(df, f"ubm_lance_{compression}_{level}", compression, level)
-            all_results[f"lance_{compression}_{level}"] = result
-    
-    # Test other compression formats
-    print("\nTesting other compression formats...")
-    other_results = compress_with_other_formats(df, "ubm_data")
+        if compression == 'zstd':
+            # Test different zstd compression levels
+            for level in ['1', '3', '6', '9']:
+                key = f"lance-{compression}-level{level}"
+                print(f"Testing {key}...")
+                result = compress_with_lance(df, f"{base_path}_{compression}_level{level}.lance", compression, level)
+                all_results[key] = result
+        else:
+            key = f"lance-{compression}"
+            print(f"Testing {key}...")
+            result = compress_with_lance(df, f"{base_path}_{compression}.lance", compression)
+            all_results[key] = result
+
+    print("\n=== Other Formats Write Tests ===")
+    other_results = compress_with_other_formats(df, base_path)
     all_results.update(other_results)
-    
-    # Benchmark read performance
-    print("\nBenchmarking read performance...")
-    read_results = benchmark_read_performance("ubm_data", lance_compressions)
-    
-    # Plot and save results
-    print("\nGenerating plots and saving results...")
-    plot_results(all_results, read_results)
-    
-    print("\nProfiling complete! Results saved to ubm_results/ directory.")
+
+    print("\n=== Read Performance Tests ===")
+    read_results = benchmark_read_performance(base_path, lance_compressions)
+
+    print("\n" + "="*90)
+    print("                           UBM DATA COMPRESSION BENCHMARK SUMMARY")
+    print("="*90)
+    print(f"{'Format':<25} {'Size (MB)':<12} {'Ratio':<10} {'Write Time (s)':<15} {'Read Time (s)':<15}")
+    print("-" * 90)
+    for fmt, res in all_results.items():
+        rtime = read_results.get(fmt, float('nan'))
+        print(f"{fmt:<25} {res.get('lance_size', res.get('size', 0)) / (1024*1024):<12.2f} {res.get('compression_ratio', 0):<10.2f} "
+              f"{res.get('write_time', 0):<15.3f} {rtime:<15.3f}")
+    print("="*90 + "\n")
+
+    # Save detailed results to output directory
+    results_file = os.path.join(output_dir, 'ubm_compression_results.json')
+    with open(results_file, 'w') as f:
+        json.dump({
+            'all_results': all_results, 
+            'read_results': read_results,
+            'dataset_info': {
+                'total_records': len(df),
+                'original_size_mb': df['total_size'].sum() / (1024*1024),
+                'key_size_stats': {
+                    'min': int(df['key_size'].min()),
+                    'max': int(df['key_size'].max()),
+                    'mean': float(df['key_size'].mean())
+                },
+                'value_size_stats': {
+                    'min': int(df['value_size'].min()),
+                    'max': int(df['value_size'].max()),
+                    'mean': float(df['value_size'].mean())
+                }
+            }
+        }, f, indent=2, default=str)
+
+    plot_results(all_results, read_results, output_dir)
+    print(f"Results saved to {results_file}")
+    print(f"Visualization saved to {os.path.join(output_dir, 'compression_comparison.png')}")
+
+    # Cleanup
+    cleanup_files = [
+        f"{base_path}_pickle.pkl",
+        f"{base_path}_gzip.gz", 
+        f"{base_path}_json.json",
+        f"{base_path}_json_gzip.json.gz"
+    ]
+    for file in cleanup_files:
+        if os.path.exists(file): 
+            os.remove(file)
+            
+    for comp in lance_compressions:
+        if comp == 'zstd':
+            # Clean up zstd files with different levels
+            for level in ['1', '3', '6', '9']:
+                dir_to_remove = f"{base_path}_{comp}_level{level}.lance"
+                if os.path.exists(dir_to_remove): 
+                    shutil.rmtree(dir_to_remove)
+        else:
+            dir_to_remove = f"{base_path}_{comp}.lance"
+            if os.path.exists(dir_to_remove): 
+                shutil.rmtree(dir_to_remove)
+
+    print("Cleanup completed.")
 
 if __name__ == "__main__":
     main()

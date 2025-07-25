@@ -1,0 +1,116 @@
+{
+  "all_results": {
+    "lance-zstd-level1": {
+      "compression": "zstd",
+      "compression_level": "1",
+      "write_time": 0.008893013000488281,
+      "lance_size": 218890,
+      "original_size": 4981219,
+      "compression_ratio": 22.756722554707846,
+      "space_saved": 95.60569410820926
+    },
+    "lance-zstd-level3": {
+      "compression": "zstd",
+      "compression_level": "3",
+      "write_time": 0.0070421695709228516,
+      "lance_size": 144714,
+      "original_size": 4981219,
+      "compression_ratio": 34.42112718879998,
+      "space_saved": 97.09480751599156
+    },
+    "lance-zstd-level6": {
+      "compression": "zstd",
+      "compression_level": "6",
+      "write_time": 0.011242866516113281,
+      "lance_size": 128906,
+      "original_size": 4981219,
+      "compression_ratio": 38.642258700138086,
+      "space_saved": 97.41215955371567
+    },
+    "lance-zstd-level9": {
+      "compression": "zstd",
+      "compression_level": "9",
+      "write_time": 0.014620065689086914,
+      "lance_size": 123530,
+      "original_size": 4981219,
+      "compression_ratio": 40.32396179065814,
+      "space_saved": 97.52008494306314
+    },
+    "lance-lz4": {
+      "compression": "lz4",
+      "compression_level": "3",
+      "write_time": 0.006227970123291016,
+      "lance_size": 6656298,
+      "original_size": 4981219,
+      "compression_ratio": 0.748346753706039,
+      "space_saved": -33.62789309203229
+    },
+    "lance-gzip": {
+      "compression": "gzip",
+      "compression_level": "3",
+      "write_time": 0.006317138671875,
+      "lance_size": 6656322,
+      "original_size": 4981219,
+      "compression_ratio": 0.7483440554708741,
+      "space_saved": -33.62837490180616
+    },
+    "pickle": {
+      "format": "pickle",
+      "write_time": 0.0012040138244628906,
+      "size": 4983362,
+      "original_size": 4981219,
+      "compression_ratio": 0.9995699690289407,
+      "space_saved": -0.04302159772537606
+    },
+    "gzip": {
+      "format": "gzip",
+      "write_time": 0.2235860824584961,
+      "size": 584512,
+      "original_size": 4981219,
+      "compression_ratio": 8.522013234972079,
+      "space_saved": 88.26568356059029
+    },
+    "json": {
+      "format": "json",
+      "write_time": 0.014557123184204102,
+      "size": 6651024,
+      "original_size": 4981219,
+      "compression_ratio": 0.74894016319893,
+      "space_saved": -33.52201539422378
+    },
+    "json_gzip": {
+      "format": "json_gzip",
+      "write_time": 0.22087693214416504,
+      "size": 1116796,
+      "original_size": 4981219,
+      "compression_ratio": 4.46027654110509,
+      "space_saved": 77.57986549075639
+    }
+  },
+  "read_results": {
+    "lance-zstd-level1": 0.0036499500274658203,
+    "lance-zstd-level3": 0.0028710365295410156,
+    "lance-zstd-level6": 0.0027959346771240234,
+    "lance-zstd-level9": 0.0029540061950683594,
+    "lance-lz4": 0.002177000045776367,
+    "lance-gzip": 0.002669095993041992,
+    "pickle": 0.0012333393096923828,
+    "gzip": 0.0037190914154052734,
+    "json": 0.0075550079345703125,
+    "json_gzip": 0.011868000030517578
+  },
+  "dataset_info": {
+    "total_records": 144,
+    "original_size_mb": 4.750460624694824,
+    "key_size_stats": {
+      "min": 3,
+      "max": 19,
+      "mean": 13.82638888888889
+    },
+    "value_size_stats": {
+      "min": 5,
+      "max": 95837,
+      "mean": 34577.97222222222
+    }
+  }
+}

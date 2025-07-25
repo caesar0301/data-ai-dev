@@ -1,0 +1,193 @@
+{
+  "compression_results": {
+    "lance_lz4_1": {
+      "compression": "lz4",
+      "compression_level": "1",
+      "write_time": 0.0521547794342041,
+      "lance_size": 6656298,
+      "original_size": 4981219,
+      "compression_ratio": 0.748346753706039,
+      "space_saved": -33.62789309203229
+    },
+    "lance_lz4_3": {
+      "compression": "lz4",
+      "compression_level": "3",
+      "write_time": 0.006777048110961914,
+      "lance_size": 6656298,
+      "original_size": 4981219,
+      "compression_ratio": 0.748346753706039,
+      "space_saved": -33.62789309203229
+    },
+    "lance_lz4_6": {
+      "compression": "lz4",
+      "compression_level": "6",
+      "write_time": 0.005834817886352539,
+      "lance_size": 6656298,
+      "original_size": 4981219,
+      "compression_ratio": 0.748346753706039,
+      "space_saved": -33.62789309203229
+    },
+    "lance_lz4_9": {
+      "compression": "lz4",
+      "compression_level": "9",
+      "write_time": 0.005936861038208008,
+      "lance_size": 6656298,
+      "original_size": 4981219,
+      "compression_ratio": 0.748346753706039,
+      "space_saved": -33.62789309203229
+    },
+    "lance_zstd_1": {
+      "compression": "zstd",
+      "compression_level": "1",
+      "write_time": 0.008649110794067383,
+      "lance_size": 218890,
+      "original_size": 4981219,
+      "compression_ratio": 22.756722554707846,
+      "space_saved": 95.60569410820926
+    },
+    "lance_zstd_3": {
+      "compression": "zstd",
+      "compression_level": "3",
+      "write_time": 0.007579803466796875,
+      "lance_size": 144714,
+      "original_size": 4981219,
+      "compression_ratio": 34.42112718879998,
+      "space_saved": 97.09480751599156
+    },
+    "lance_zstd_6": {
+      "compression": "zstd",
+      "compression_level": "6",
+      "write_time": 0.01112818717956543,
+      "lance_size": 128906,
+      "original_size": 4981219,
+      "compression_ratio": 38.642258700138086,
+      "space_saved": 97.41215955371567
+    },
+    "lance_zstd_9": {
+      "compression": "zstd",
+      "compression_level": "9",
+      "write_time": 0.0136871337890625,
+      "lance_size": 123530,
+      "original_size": 4981219,
+      "compression_ratio": 40.32396179065814,
+      "space_saved": 97.52008494306314
+    },
+    "lance_gzip_1": {
+      "compression": "gzip",
+      "compression_level": "1",
+      "write_time": 0.006109952926635742,
+      "lance_size": 6656322,
+      "original_size": 4981219,
+      "compression_ratio": 0.7483440554708741,
+      "space_saved": -33.62837490180616
+    },
+    "lance_gzip_3": {
+      "compression": "gzip",
+      "compression_level": "3",
+      "write_time": 0.006504058837890625,
+      "lance_size": 6656322,
+      "original_size": 4981219,
+      "compression_ratio": 0.7483440554708741,
+      "space_saved": -33.62837490180616
+    },
+    "lance_gzip_6": {
+      "compression": "gzip",
+      "compression_level": "6",
+      "write_time": 0.007026195526123047,
+      "lance_size": 6656322,
+      "original_size": 4981219,
+      "compression_ratio": 0.7483440554708741,
+      "space_saved": -33.62837490180616
+    },
+    "lance_gzip_9": {
+      "compression": "gzip",
+      "compression_level": "9",
+      "write_time": 0.0067670345306396484,
+      "lance_size": 6656322,
+      "original_size": 4981219,
+      "compression_ratio": 0.7483440554708741,
+      "space_saved": -33.62837490180616
+    },
+    "lance_brotli_1": {
+      "compression": "brotli",
+      "compression_level": "1",
+      "write_time": 0.007081031799316406,
+      "lance_size": 6656370,
+      "original_size": 4981219,
+      "compression_ratio": 0.7483386590589165,
+      "space_saved": -33.62933852135391
+    },
+    "lance_brotli_3": {
+      "compression": "brotli",
+      "compression_level": "3",
+      "write_time": 0.006239175796508789,
+      "lance_size": 6656370,
+      "original_size": 4981219,
+      "compression_ratio": 0.7483386590589165,
+      "space_saved": -33.62933852135391
+    },
+    "lance_brotli_6": {
+      "compression": "brotli",
+      "compression_level": "6",
+      "write_time": 0.006546974182128906,
+      "lance_size": 6656370,
+      "original_size": 4981219,
+      "compression_ratio": 0.7483386590589165,
+      "space_saved": -33.62933852135391
+    },
+    "lance_brotli_9": {
+      "compression": "brotli",
+      "compression_level": "9",
+      "write_time": 0.00888514518737793,
+      "lance_size": 6656370,
+      "original_size": 4981219,
+      "compression_ratio": 0.7483386590589165,
+      "space_saved": -33.62933852135391
+    },
+    "pickle": {
+      "format": "pickle",
+      "write_time": 0.0020079612731933594,
+      "size": 4983362,
+      "original_size": 4981219,
+      "compression_ratio": 0.9995699690289407,
+      "space_saved": -0.04302159772537606
+    },
+    "gzip": {
+      "format": "gzip",
+      "write_time": 0.22780609130859375,
+      "size": 584512,
+      "original_size": 4981219,
+      "compression_ratio": 8.522013234972079,
+      "space_saved": 88.26568356059029
+    },
+    "json": {
+      "format": "json",
+      "write_time": 0.014596939086914062,
+      "size": 6651024,
+      "original_size": 4981219,
+      "compression_ratio": 0.74894016319893,
+      "space_saved": -33.52201539422378
+    },
+    "json_gzip": {
+      "format": "json_gzip",
+      "write_time": 0.23028302192687988,
+      "size": 1116796,
+      "original_size": 4981219,
+      "compression_ratio": 4.46027654110509,
+      "space_saved": 77.57986549075639
+    }
+  },
+  "read_results": {
+    "pickle_read": 0.0011382102966308594,
+    "gzip_read": 0.006304025650024414,
+    "json_read": 0.008036136627197266,
+    "json_gzip_read": 0.011799097061157227
+  },
+  "summary_stats": {
+    "total_records": 20,
+    "original_size_mb": 6.34800910949707,
+    "best_compression": "lance_zstd",
+    "fastest_write": "pickle",
+    "smallest_size": "lance_zstd"
+  }
+}

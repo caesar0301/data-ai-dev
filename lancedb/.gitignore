@@ -154,3 +154,6 @@ text_results/
 vector_results/
 text_data*
 sift_vectors*
+
+ubm_data/
+ubm_results/

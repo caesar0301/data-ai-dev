@@ -1277,4 +1277,4 @@ agents = ["weaviate-agents (>=0.3.0,<1.0.0)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11"
-content-hash = "552ac20e37cacf2b202acae9819c6f637eda7e9c14fba2ca4d9fd5c41a2fcc1f"
+content-hash = "7d83eb33cf6b5ed6a1fcc792201893a87e1af2913fdd37e799025a3a383462ab"

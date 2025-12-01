@@ -33,7 +33,7 @@ helm uninstall kuberay-operator
 ## Check ray-python version compatibility
 
 ```
-kubectl exec -it  <head-pod> -- python -c "import ray; print(ray.version); import sys; print(sys.version)"
+kubectl exec -it  <head-pod> -- python -c "import ray; print(ray._version); import sys; print(sys.version)"
 
 pip install "ray[default,data]==2.44.1" "numpy<2.0"
 ```

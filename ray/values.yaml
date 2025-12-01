@@ -26,11 +26,11 @@ common:
 head:
   # rayVersion determines the autoscaler's image version.
   # It should match the Ray version in the image of the containers.
-  # rayVersion: 2.41.0
+  rayVersion: 2.44.1
   # If enableInTreeAutoscaling is true, the autoscaler sidecar will be added to the Ray head pod.
   # Ray autoscaler integration is supported only for Ray versions >= 1.11.0
   # Ray autoscaler integration is Beta with KubeRay >= 0.3.0 and Ray >= 2.0.0.
-  # enableInTreeAutoscaling: true
+  enableInTreeAutoscaling: true
   # autoscalerOptions is an OPTIONAL field specifying configuration overrides for the Ray autoscaler.
   # The example configuration shown below represents the DEFAULT values.
   # autoscalerOptions:
@@ -81,7 +81,7 @@ head:
     limits:
       cpu: "1"
       # To avoid out-of-memory issues, never allocate less than 2G memory for the Ray head.
-      memory: "2G"
+      memory: "4G"
     requests:
       cpu: "1"
       memory: "2G"
@@ -163,7 +163,7 @@ worker:
   resources:
     limits:
       cpu: "1"
-      memory: "1G"
+      memory: "2G"
     requests:
       cpu: "1"
       memory: "1G"

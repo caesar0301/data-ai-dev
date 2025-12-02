@@ -1,0 +1,2 @@
+torch
+nvidia-dali-cuda120
